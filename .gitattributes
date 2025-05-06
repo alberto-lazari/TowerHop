@@ -1,0 +1,14 @@
+[attr]lfs filter=lfs diff=lfs merge=lfs -text
+
+# Unreal assets
+*.u{asset,map} lfs
+# Save imported assets sources here
+/RawContent/**/* lfs
+# Fallback for common file types
+*.fbx lfs
+*.png lfs
+*.{jpg,jpeg} lfs
+*.ico lfs
+*.mp3 lfs
+*.uasset filter=lfs diff=lfs merge=lfs -text
+*.umap filter=lfs diff=lfs merge=lfs -text
