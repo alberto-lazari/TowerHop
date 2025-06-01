@@ -13,7 +13,11 @@ class ATowerHopGameMode : public AGameModeBase
 
 public:
 	ATowerHopGameMode();
+
+    void HandlePlayerDeath();
+
+private:
+    FTimerHandle RestartTimer;
+
+    void ResetLevel();
 };
-
-
-

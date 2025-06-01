@@ -47,6 +47,11 @@ class ATowerHopCharacter : public ACharacter
 public:
 	ATowerHopCharacter();
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+    int32 MaxHealth = 3;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+    int32 Health = MaxHealth;
 
 protected:
 
@@ -56,12 +61,21 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+    void Die();
+
 
 protected:
 
 	virtual void NotifyControllerChanged() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+    virtual float TakeDamage(
+        float DamageAmount,
+        struct FDamageEvent const& DamageEvent,
+        AController* EventInstigator,
+        AActor* DamageCauser
+    ) override;
 
 public:
 	/** Returns CameraBoom subobject **/

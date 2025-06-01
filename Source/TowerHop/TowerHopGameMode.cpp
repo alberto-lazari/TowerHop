@@ -3,6 +3,7 @@
 #include "TowerHopGameMode.h"
 #include "TowerHopCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 ATowerHopGameMode::ATowerHopGameMode()
 {
@@ -12,4 +13,16 @@ ATowerHopGameMode::ATowerHopGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+void ATowerHopGameMode::HandlePlayerDeath()
+{
+    // Delay game restart
+    float Delay = 1.5f;
+    GetWorldTimerManager().SetTimer(RestartTimer, this, &ATowerHopGameMode::ResetLevel, Delay, false);
+}
+
+void ATowerHopGameMode::ResetLevel()
+{
+    UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }

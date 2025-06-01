@@ -10,6 +10,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
+#include "TowerHopGameMode.h"
+#include "TowerHopCharacterAnimInstance.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -92,6 +95,28 @@ void ATowerHopCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	}
 }
 
+float ATowerHopCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+        AController* EventInstigator, AActor* DamageCauser)
+{
+    // If already dead do nothing
+    if (Health <= 0)
+    {
+        return 0.f;
+    }
+
+    Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
+    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
+            FString::Printf(TEXT("Player health: %d"), Health));
+
+    if (Health <= 0)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Player is dead"));
+        Die();
+    }
+
+    return DamageAmount;
+}
+
 void ATowerHopCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -126,4 +151,29 @@ void ATowerHopCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ATowerHopCharacter::Die()
+{
+    // Stop character and disable any further input
+    GetCharacterMovement()->DisableMovement();
+    if (APlayerController* Controller = Cast<APlayerController>(GetController()))
+    {
+        Controller->DisableInput(Controller);
+    }
+
+    // Trigger death animation
+    if (USkeletalMeshComponent* Mesh = GetMesh())
+    {
+        if (UTowerHopCharacterAnimInstance* AnimInstance =
+            Cast<UTowerHopCharacterAnimInstance>(Mesh->GetAnimInstance()))
+        {
+            AnimInstance->bDead = true;
+        }
+    }
+
+    if (ATowerHopGameMode* GameMode = Cast<ATowerHopGameMode>(UGameplayStatics::GetGameMode(this)))
+    {
+        GameMode->HandlePlayerDeath();
+    }
 }

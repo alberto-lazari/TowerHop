@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "AEnemy.generated.h"
+#include "Enemy.generated.h"
 
 UCLASS()
 class TOWERHOP_API AEnemy : public ACharacter
