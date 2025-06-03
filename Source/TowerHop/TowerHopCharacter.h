@@ -61,21 +61,17 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-    void Die();
-
-
-protected:
-
 	virtual void NotifyControllerChanged() override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
     virtual float TakeDamage(
         float DamageAmount,
-        struct FDamageEvent const& DamageEvent,
+        const FDamageEvent& DamageEvent,
         AController* EventInstigator,
         AActor* DamageCauser
     ) override;
+
+    void Die();
 
 public:
 	/** Returns CameraBoom subobject **/

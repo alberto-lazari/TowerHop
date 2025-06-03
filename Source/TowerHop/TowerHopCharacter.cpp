@@ -95,7 +95,7 @@ void ATowerHopCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	}
 }
 
-float ATowerHopCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+float ATowerHopCharacter::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent,
         AController* EventInstigator, AActor* DamageCauser)
 {
     // If already dead do nothing
@@ -166,7 +166,7 @@ void ATowerHopCharacter::Die()
     if (USkeletalMeshComponent* Mesh = GetMesh())
     {
         if (UTowerHopCharacterAnimInstance* AnimInstance =
-            Cast<UTowerHopCharacterAnimInstance>(Mesh->GetAnimInstance()))
+                Cast<UTowerHopCharacterAnimInstance>(Mesh->GetAnimInstance()))
         {
             AnimInstance->bDead = true;
         }
