@@ -4,6 +4,7 @@
 #include "TowerHopCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/TowerHopHUD.h"
 
 ATowerHopGameMode::ATowerHopGameMode()
 {
@@ -13,6 +14,9 @@ ATowerHopGameMode::ATowerHopGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+    // Set HUD
+    HUDClass = ATowerHopHUD::StaticClass();
 }
 
 void ATowerHopGameMode::HandlePlayerDeath()

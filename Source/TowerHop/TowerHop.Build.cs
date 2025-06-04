@@ -8,6 +8,15 @@ public class TowerHop : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"EnhancedInput",
+			"InputCore",
+			"UMG",
+			"Slate",
+			"SlateCore"
+		});
 	}
 }

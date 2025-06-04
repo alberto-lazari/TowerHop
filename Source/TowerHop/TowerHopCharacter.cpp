@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TowerHopGameMode.h"
 #include "TowerHopCharacterAnimInstance.h"
+#include "UI/TowerHopHUD.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -55,6 +56,17 @@ ATowerHopCharacter::ATowerHopCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+}
+
+void ATowerHopCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    HUD = Cast<ATowerHopHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+    if (HUD)
+    {
+        HUD->UpdateHealthUI(Health, MaxHealth);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,12 +117,15 @@ float ATowerHopCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Dam
     }
 
     Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
-    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
-            FString::Printf(TEXT("Player health: %d"), Health));
+
+    // Update UI
+    if (HUD)
+    {
+        HUD->UpdateHealthUI(Health, MaxHealth);
+    }
 
     if (Health <= 0)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Player is dead"));
         Die();
     }
 
