@@ -2,7 +2,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "TowerHop/TowerHopCharacter.h"
+#include "PlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AEnemy::AEnemy()
@@ -39,7 +39,7 @@ void AEnemy::OnBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 {
     if (!OtherActor || OtherActor == this) return;
 
-    if (ATowerHopCharacter* Player = Cast<ATowerHopCharacter>(OtherActor))
+    if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
     {
         // Player takes damage
         UGameplayStatics::ApplyDamage(Player, 1.f, GetController(), this, nullptr);
@@ -56,7 +56,7 @@ void AEnemy::OnHeadOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 {
     if (!OtherActor || OtherActor == this) return;
 
-    if (ATowerHopCharacter* Player = Cast<ATowerHopCharacter>(OtherActor))
+    if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
     {
         // Enemy takes damage
         UGameplayStatics::ApplyDamage(this, 1.f, Player->GetController(), Player, nullptr);

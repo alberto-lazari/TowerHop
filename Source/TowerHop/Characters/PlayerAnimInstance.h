@@ -1,9 +1,9 @@
 #pragma once
 
-#include "TowerHopCharacterAnimInstance.generated.h"
+#include "PlayerAnimInstance.generated.h"
 
 UCLASS(transient, Blueprintable, hideCategories=AnimInstance, BlueprintType)
-class UTowerHopCharacterAnimInstance : public UAnimInstance
+class UPlayerAnimInstance : public UAnimInstance
 {
     GENERATED_UCLASS_BODY()
 

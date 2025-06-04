@@ -1,16 +1,17 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TowerHopGameMode.h"
-#include "TowerHopCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Characters/PlayerCharacter.h"
 #include "UI/TowerHopHUD.h"
 
 ATowerHopGameMode::ATowerHopGameMode()
 {
-	// set default pawn class to our Blueprinted character
+	// Set default pawn class to player's blueprint
+	// static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/BP_PlayerCharacter"));
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter"));
-	if (PlayerPawnBPClass.Class != NULL)
+	if (PlayerPawnBPClass.Class)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}

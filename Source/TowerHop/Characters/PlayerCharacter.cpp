@@ -11,7 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Kismet/GameplayStatics.h"
-#include "TowerHop/TowerHopCharacterAnimInstance.h"
+#include "PlayerAnimInstance.h"
 #include "TowerHop/TowerHopGameMode.h"
 #include "TowerHop/UI/TowerHopHUD.h"
 
@@ -180,8 +180,8 @@ void APlayerCharacter::Die()
     // Trigger death animation
     if (USkeletalMeshComponent* Mesh = GetMesh())
     {
-        if (UTowerHopCharacterAnimInstance* AnimInstance =
-                Cast<UTowerHopCharacterAnimInstance>(Mesh->GetAnimInstance()))
+        if (UPlayerAnimInstance* AnimInstance =
+                Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
         {
             AnimInstance->bDead = true;
         }
