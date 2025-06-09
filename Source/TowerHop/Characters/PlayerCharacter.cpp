@@ -60,13 +60,13 @@ APlayerCharacter::APlayerCharacter()
 
 void APlayerCharacter::BeginPlay()
 {
-    Super::BeginPlay();
+	Super::BeginPlay();
 
-    HUD = Cast<ATowerHopHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-    if (HUD)
-    {
-        HUD->UpdateHealthUI(Health, MaxHealth);
-    }
+	HUD = Cast<ATowerHopHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (HUD)
+	{
+		HUD->UpdateHealthUI(Health, MaxHealth);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -108,28 +108,28 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent,
-        AController* EventInstigator, AActor* DamageCauser)
+		AController* EventInstigator, AActor* DamageCauser)
 {
-    // If already dead do nothing
-    if (Health <= 0)
-    {
-        return 0.f;
-    }
+	// If already dead do nothing
+	if (Health <= 0)
+	{
+		return 0.f;
+	}
 
-    Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
+	Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
 
-    // Update UI
-    if (HUD)
-    {
-        HUD->UpdateHealthUI(Health, MaxHealth);
-    }
+	// Update UI
+	if (HUD)
+	{
+		HUD->UpdateHealthUI(Health, MaxHealth);
+	}
 
-    if (Health <= 0)
-    {
-        Die();
-    }
+	if (Health <= 0)
+	{
+		Die();
+	}
 
-    return DamageAmount;
+	return DamageAmount;
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -170,25 +170,25 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Die()
 {
-    // Stop character and disable any further input
-    GetCharacterMovement()->DisableMovement();
-    if (APlayerController* Controller = Cast<APlayerController>(GetController()))
-    {
-        Controller->DisableInput(Controller);
-    }
+	// Stop character and disable any further input
+	GetCharacterMovement()->DisableMovement();
+	if (APlayerController* Controller = Cast<APlayerController>(GetController()))
+	{
+		Controller->DisableInput(Controller);
+	}
 
-    // Trigger death animation
-    if (USkeletalMeshComponent* Mesh = GetMesh())
-    {
-        if (UPlayerAnimInstance* AnimInstance =
-                Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
-        {
-            AnimInstance->bDead = true;
-        }
-    }
+	// Trigger death animation
+	if (USkeletalMeshComponent* Mesh = GetMesh())
+	{
+		if (UPlayerAnimInstance* AnimInstance =
+				Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
+		{
+			AnimInstance->bDead = true;
+		}
+	}
 
-    if (ATowerHopGameMode* GameMode = Cast<ATowerHopGameMode>(UGameplayStatics::GetGameMode(this)))
-    {
-        GameMode->HandlePlayerDeath();
-    }
+	if (ATowerHopGameMode* GameMode = Cast<ATowerHopGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->HandlePlayerDeath();
+	}
 }

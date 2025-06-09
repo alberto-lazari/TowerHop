@@ -46,26 +46,26 @@ class APlayerCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
-    ATowerHopHUD* HUD;
+	ATowerHopHUD* HUD;
 
 public:
 	APlayerCharacter();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-    int32 MaxHealth = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 MaxHealth = 3;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-    int32 Health = MaxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 Health = MaxHealth;
 
 protected:
-    virtual void BeginPlay() override;
+	virtual void BeginPlay() override;
 
-    virtual float TakeDamage(
-        float DamageAmount,
-        const FDamageEvent& DamageEvent,
-        AController* EventInstigator,
-        AActor* DamageCauser
-    ) override;
+	virtual float TakeDamage(
+		float DamageAmount,
+		const FDamageEvent& DamageEvent,
+		AController* EventInstigator,
+		AActor* DamageCauser
+	) override;
 
 	virtual void NotifyControllerChanged() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -76,7 +76,7 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-    void Die();
+	void Die();
 
 public:
 	/** Returns CameraBoom subobject **/

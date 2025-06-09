@@ -9,27 +9,27 @@
 UCLASS()
 class TOWERHOP_API UPlayerHealthWidget : public UUserWidget
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    UFUNCTION(BlueprintCallable)
-    void UpdateHearts(int32 Health, int32 MaxHealth);
+	UFUNCTION(BlueprintCallable)
+	void UpdateHearts(int32 Health, int32 MaxHealth);
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    UTexture2D* HeartTexture;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UTexture2D* HeartTexture;
 
 protected:
-    virtual void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
-    UPROPERTY(meta = (BindWidget))
-    UHorizontalBox* HeartsContainer;
+	UPROPERTY(meta = (BindWidget))
+	UHorizontalBox* HeartsContainer;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-    float HeartSize = 50.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	float HeartSize = 50.f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-    float HeartPadding = 10.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	float HeartPadding = 10.f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-    float LostHeartOpacity = 0.3f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	float LostHeartOpacity = 0.3f;
 };

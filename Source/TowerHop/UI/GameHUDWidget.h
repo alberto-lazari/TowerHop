@@ -9,9 +9,9 @@ class UHorizontalBox;
 UCLASS()
 class TOWERHOP_API UGameHUDWidget : public UUserWidget
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    UPROPERTY(meta = (BindWidget))
-    UHorizontalBox* HealthContainer;
+	UPROPERTY(meta = (BindWidget))
+	UHorizontalBox* HealthContainer;
 };
