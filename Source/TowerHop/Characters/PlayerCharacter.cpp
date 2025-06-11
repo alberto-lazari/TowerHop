@@ -107,14 +107,36 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void APlayerCharacter::PickCoin(int32 CoinValue)
+{
+	if (CoinValue <= 0) return;
+
+	Coins += CoinValue;
+
+	if (Coins % CoinsPerHeart == 0)
+	{
+		// Player picked enough coin to get a heart.
+		// Increment current health and check if a new heart is gained
+		if (++Health > MaxHealth
+			// If so, increment the number of hearts and check if it overflowed the limit
+			&& ++MaxHealth > MaxHealthLimit)
+		{
+			// Reset current health to the maximum limit if it overflowed
+			Health = MaxHealth = MaxHealthLimit;
+		}
+
+		if (HUD)
+		{
+			HUD->UpdateHealthUI(Health, MaxHealth);
+		}
+	}
+}
+
 float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent,
 		AController* EventInstigator, AActor* DamageCauser)
 {
 	// If already dead do nothing
-	if (Health <= 0)
-	{
-		return 0.f;
-	}
+	if (Health <= 0) return 0.f;
 
 	Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
 

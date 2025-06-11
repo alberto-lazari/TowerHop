@@ -4,8 +4,6 @@
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
-class USphereComponent;
-
 UCLASS()
 class TOWERHOP_API AEnemy : public ACharacter
 {
@@ -24,7 +22,7 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
-	USphereComponent* HeadCollider;
+	class USphereComponent* HeadCollider;
 
 	UFUNCTION()
 	void OnBodyHit(

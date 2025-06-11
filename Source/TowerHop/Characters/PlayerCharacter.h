@@ -52,10 +52,21 @@ public:
 	APlayerCharacter();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 MaxHealthLimit = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 MaxHealth = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 Health = MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	int32 Coins = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	int32 CoinsPerHeart = 10;
+
+	void PickCoin(int32 CoinValue);
 
 protected:
 	virtual void BeginPlay() override;
