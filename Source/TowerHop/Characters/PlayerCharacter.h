@@ -60,10 +60,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 Health = MaxHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collectible")
 	int32 Coins = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collectible")
 	int32 CoinsPerHeart = 10;
 
 	void PickCoin(int32 CoinValue);

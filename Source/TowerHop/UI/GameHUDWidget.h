@@ -4,8 +4,6 @@
 #include "Blueprint/UserWidget.h"
 #include "GameHUDWidget.generated.h"
 
-class UHorizontalBox;
-
 UCLASS()
 class TOWERHOP_API UGameHUDWidget : public UUserWidget
 {
@@ -13,5 +11,8 @@ class TOWERHOP_API UGameHUDWidget : public UUserWidget
 
 public:
 	UPROPERTY(meta = (BindWidget))
-	UHorizontalBox* HealthContainer;
+	class UHorizontalBox* HealthContainer;
+
+	UPROPERTY(meta = (BindWidget))
+	class UVerticalBox* CollectiblesContainer;
 };

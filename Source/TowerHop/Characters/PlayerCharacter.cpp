@@ -66,6 +66,7 @@ void APlayerCharacter::BeginPlay()
 	if (HUD)
 	{
 		HUD->UpdateHealthUI(Health, MaxHealth);
+		HUD->UpdateCoinsUI(0);
 	}
 }
 
@@ -129,6 +130,11 @@ void APlayerCharacter::PickCoin(int32 CoinValue)
 		{
 			HUD->UpdateHealthUI(Health, MaxHealth);
 		}
+	}
+
+	if (HUD)
+	{
+		HUD->UpdateCoinsUI(Coins);
 	}
 }
 
