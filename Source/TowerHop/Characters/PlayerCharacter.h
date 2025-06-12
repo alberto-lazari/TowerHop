@@ -89,8 +89,8 @@ protected:
 
 	void Die();
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-    UAnimMontage* HitReactMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UAnimMontage* HitReactMontage;
 
 public:
 	/** Returns CameraBoom subobject **/

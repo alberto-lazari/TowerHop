@@ -6,18 +6,18 @@
 
 ACoin::ACoin()
 {
-    // Create and assign the collider
-    Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
-    RootComponent = Collider;
+	// Create and assign the collider
+	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
+	RootComponent = Collider;
 
-    // Create and attach the mesh
-    Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-    Mesh->SetupAttachment(Collider);
+	// Create and attach the mesh
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(Collider);
 
-    // Collider defaults
-    Collider->SetSphereRadius(50.f);
-    Collider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    Collider->SetCollisionResponseToAllChannels(ECR_Overlap);
+	// Collider defaults
+	Collider->SetSphereRadius(50.f);
+	Collider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Collider->SetCollisionResponseToAllChannels(ECR_Overlap);
 
 	if (Collider)
 	{
@@ -26,8 +26,8 @@ ACoin::ACoin()
 	}
 
 	// Create rotating movement component
-    RotatingComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("RotatingComponent"));
-    RotatingComponent->RotationRate = FRotator(0.f, 180.f, 0.f);
+	RotatingComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("RotatingComponent"));
+	RotatingComponent->RotationRate = FRotator(0.f, 180.f, 0.f);
 }
 
 void ACoin::OnPick(UPrimitiveComponent* OverlappedComp,
