@@ -156,6 +156,17 @@ float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Damag
 	{
 		Die();
 	}
+	else if (HitReactMontage)
+	{
+		// Trigger hit animation
+		if (USkeletalMeshComponent* Mesh = GetMesh())
+		{
+			if (UPlayerAnimInstance* AnimInstance = Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
+			{
+				AnimInstance->Montage_Play(HitReactMontage);
+			}
+		}
+	}
 
 	return DamageAmount;
 }
