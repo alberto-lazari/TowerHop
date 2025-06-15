@@ -1,12 +1,20 @@
 #include "MovingPlatform.h"
+#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 AMovingPlatform::AMovingPlatform()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootComponent = Collider = CreateDefaultSubobject<UBoxComponent>(TEXT("Collider"));
+	// Make it kinematic
+	Collider->SetSimulatePhysics(false);
+	Collider->SetMobility(EComponentMobility::Movable);
+	Collider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	RootComponent = Mesh;
+	Mesh->SetupAttachment(Collider);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AMovingPlatform::BeginPlay()
