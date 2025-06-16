@@ -3,63 +3,69 @@
 #include "TowerHop/UI/PauseMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogPlayerCharacterController, Log, All);
+
+APlayerCharacterController::APlayerCharacterController()
+{
+	static ConstructorHelpers::FClassFinder<UPauseMenuWidget> PauseMenuWidgetObj(TEXT("/Game/UI/WBP_PauseMenu"));
+	if (PauseMenuWidgetObj.Succeeded())
+	{
+		PauseMenuWidgetClass = PauseMenuWidgetObj.Class;
+	}
+	else
+	{
+		UE_LOG(LogPlayerCharacterController, Error, TEXT("Failed to find WBP_PauseMenu"));
+	}
+}
+
 void APlayerCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (PauseMenuClass)
+	if (PauseMenuWidgetClass)
 	{
-		PauseMenu = CreateWidget<UPauseMenuWidget>(this, PauseMenuClass);
-		if (PauseMenu)
+		PauseMenuWidget = CreateWidget<UPauseMenuWidget>(this, PauseMenuWidgetClass);
+		if (PauseMenuWidget)
 		{
-			PauseMenu->AddToViewport();
-
-			// Start game on pause/main menu
-			PauseGame();
+			PauseMenuWidget->AddToViewport();
+			SetGamePaused(false);
 		}
+	}
+}
+
+void APlayerCharacterController::SetGamePaused(bool bPaused)
+{
+	bGamePaused = bPaused;
+	UGameplayStatics::SetGamePaused(GetWorld(), bPaused);
+	if (bPaused)
+	{
+		SetInputMode(FInputModeGameAndUI());
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+	}
+
+	if (PauseMenuWidget)
+	{
+		bShowMouseCursor = bPaused;
+		PauseMenuWidget->SetVisibility(bPaused ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	}
 }
 
 void APlayerCharacterController::TogglePauseMenu()
 {
-	// Toggle pause state
-	bIsPaused = !bIsPaused;
-
-	if (bIsPaused) PauseGame();
-	else ResumeGame();
-}
-
-void APlayerCharacterController::PauseGame()
-{
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
-
-	if (PauseMenu)
-	{
-		SetInputMode(FInputModeUIOnly());
-		bShowMouseCursor = true;
-		PauseMenu->SetVisibility(ESlateVisibility::Visible);
-	}
+	SetGamePaused(!bGamePaused);
 }
 
 void APlayerCharacterController::ResumeGame()
 {
-	UGameplayStatics::SetGamePaused(GetWorld(), false);
-
-	SetInputMode(FInputModeGameOnly());
-	bShowMouseCursor = false;
-
-	if (PauseMenu)
-	{
-		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
-	}
+	SetGamePaused(false);
 }
 
 void APlayerCharacterController::StartNewGame()
 {
 	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()));
-
-	// Game starts on main menu, skip that
-	ResumeGame();
 }
 
 void APlayerCharacterController::QuitGame()

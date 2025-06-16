@@ -10,11 +10,10 @@ class TOWERHOP_API APlayerCharacterController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void TogglePauseMenu();
+	APlayerCharacterController();
 
 	UFUNCTION(BlueprintCallable)
-	void PauseGame();
+	void TogglePauseMenu();
 
 	UFUNCTION(BlueprintCallable)
 	void ResumeGame();
@@ -30,10 +29,12 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> PauseMenuClass;
+	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 
 	UPROPERTY()
-	class UPauseMenuWidget* PauseMenu;
+	class UPauseMenuWidget* PauseMenuWidget;
 
-	bool bIsPaused = false;
+	bool bGamePaused = false;
+
+	void SetGamePaused(bool bPaused);
 };

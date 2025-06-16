@@ -32,5 +32,5 @@ void ATowerHopGameMode::HandlePlayerDeath()
 
 void ATowerHopGameMode::ResetLevel()
 {
-	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()), false);
 }
