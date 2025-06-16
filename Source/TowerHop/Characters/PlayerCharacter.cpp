@@ -14,6 +14,7 @@
 #include "PlayerAnimInstance.h"
 #include "TowerHop/TowerHopGameMode.h"
 #include "TowerHop/UI/TowerHopHUD.h"
+#include "PlayerCharacterController.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerCharacter);
 
@@ -90,17 +91,20 @@ void APlayerCharacter::NotifyControllerChanged()
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-
+	if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		Input->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		Input->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+
+		// Toggle pause menu
+		Input->BindAction(TogglePauseAction, ETriggerEvent::Triggered, this, &APlayerCharacter::TogglePauseMenu);
 	}
 	else
 	{
@@ -211,9 +215,9 @@ void APlayerCharacter::Die()
 {
 	// Stop character and disable any further input
 	GetCharacterMovement()->DisableMovement();
-	if (APlayerController* Controller = Cast<APlayerController>(GetController()))
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		Controller->DisableInput(Controller);
+		PlayerController->DisableInput(PlayerController);
 	}
 
 	// Trigger death animation
@@ -229,5 +233,13 @@ void APlayerCharacter::Die()
 	if (ATowerHopGameMode* GameMode = Cast<ATowerHopGameMode>(UGameplayStatics::GetGameMode(this)))
 	{
 		GameMode->HandlePlayerDeath();
+	}
+}
+
+void APlayerCharacter::TogglePauseMenu()
+{
+	if (APlayerCharacterController* PlayerController = Cast<APlayerCharacterController>(Controller))
+	{
+		PlayerController->TogglePauseMenu();
 	}
 }

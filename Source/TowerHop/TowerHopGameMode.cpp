@@ -4,6 +4,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Characters/PlayerCharacter.h"
+#include "Characters/PlayerCharacterController.h"
 #include "UI/TowerHopHUD.h"
 
 ATowerHopGameMode::ATowerHopGameMode()
@@ -14,6 +15,9 @@ ATowerHopGameMode::ATowerHopGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	// Set custom player controller
+	PlayerControllerClass = APlayerCharacterController::StaticClass();
 
 	// Set HUD
 	HUDClass = ATowerHopHUD::StaticClass();
