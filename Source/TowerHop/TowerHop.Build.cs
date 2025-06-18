@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 using UnrealBuildTool;
 
 public class TowerHop : ModuleRules
@@ -16,7 +14,7 @@ public class TowerHop : ModuleRules
 			"InputCore",
 			"UMG",
 			"Slate",
-			"SlateCore"
+			"SlateCore",
 		});
 	}
 }
