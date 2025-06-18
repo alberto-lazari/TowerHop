@@ -4,6 +4,7 @@
 #include "Components/PointLightComponent.h"
 #include "GameFramework/RotatingMovementComponent.h"
 #include "TowerHop/Characters/PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 ACoin::ACoin()
 {
@@ -63,6 +64,10 @@ void ACoin::OnPick(UPrimitiveComponent* OverlappedComp,
 		FlashLight->SetIntensity(0.f);
 
 		PrimaryActorTick.SetTickFunctionEnable(true);
+	}
+	if (PickSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, PickSound, GetActorLocation());
 	}
 
 	// Leave a small delay for effects to happen

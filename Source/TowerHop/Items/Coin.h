@@ -15,7 +15,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Coin")
 	int32 CoinValue = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* PickSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UPointLightComponent* FlashLight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	float FlashDuration = 0.1f;
+
 protected:
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* Collider;
 
@@ -34,15 +45,6 @@ protected:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
-
-	virtual void Tick(float DeltaTime) override;
-
-	// Flash effect
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
-	class UPointLightComponent* FlashLight;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
-	float FlashDuration = 0.1f;
 
 private:
 	bool bFlashActive = false;
