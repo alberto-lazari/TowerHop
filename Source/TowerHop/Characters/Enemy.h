@@ -80,4 +80,18 @@ private:
 
 	void StartScaleAnimation(FVector TargetScale, float Duration, bool bRestore = false);
 	void PlayScaleAnimation(float DeltaTime);
+
+public:
+	// Patrol fields
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float Speed = 250.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+	FVector PatrolCenter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
+	float PatrolRadius = 100.f;
+
+private:
+	void CircularPatrol();
 };

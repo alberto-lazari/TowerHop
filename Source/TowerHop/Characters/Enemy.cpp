@@ -28,10 +28,9 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsAnimating)
-	{
-		PlayScaleAnimation(DeltaTime);
-	}
+	if (bIsAnimating) PlayScaleAnimation(DeltaTime);
+	// Stop patroling when dead
+	else if (Health > 0) CircularPatrol();
 }
 
 void AEnemy::OnBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
@@ -146,5 +145,26 @@ void AEnemy::PlayScaleAnimation(float DeltaTime)
 		{
 			bIsAnimating = false;
 		}
+	}
+}
+
+void AEnemy::CircularPatrol()
+{
+	float Time = GetWorld()->GetTimeSeconds();
+	FVector NewLocation = PatrolCenter + FVector(
+		FMath::Cos(Time * Speed) * PatrolRadius,
+		FMath::Sin(Time * Speed) * PatrolRadius,
+		0.f
+	);
+	FVector Movement = NewLocation - GetActorLocation();
+	SetActorLocation(NewLocation);
+
+	FVector Radius = PatrolCenter - NewLocation;
+	FVector Direction = Radius.Cross(Movement).Cross(Radius);
+
+	if (!Direction.IsNearlyZero())
+	{
+		FRotator LookRotation = Direction.GetSafeNormal().Rotation();
+		SetActorRotation(FRotator(0.f, LookRotation.Yaw, 0.f));
 	}
 }
