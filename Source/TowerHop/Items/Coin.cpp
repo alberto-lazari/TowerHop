@@ -1,14 +1,16 @@
 #include "Coin.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
 #include "GameFramework/RotatingMovementComponent.h"
 #include "TowerHop/Characters/PlayerCharacter.h"
 
 ACoin::ACoin()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Create and assign the collider
-	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
-	RootComponent = Collider;
+	RootComponent = Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
 
 	// Create and attach the mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -28,6 +30,11 @@ ACoin::ACoin()
 	// Create rotating movement component
 	RotatingComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("RotatingComponent"));
 	RotatingComponent->RotationRate = FRotator(0.f, 180.f, 0.f);
+
+	// Flash effect
+	FlashLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("FlashLight"));
+	FlashLight->SetupAttachment(RootComponent);
+	FlashLight->SetVisibility(false);
 }
 
 void ACoin::OnPick(UPrimitiveComponent* OverlappedComp,
@@ -36,10 +43,61 @@ void ACoin::OnPick(UPrimitiveComponent* OverlappedComp,
 {
 	if (!OtherActor || OtherActor == this) return;
 
-	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
+	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
+
+	// Can only be picked by the player
+	if (!Player) return;
+
+	Player->PickCoin(CoinValue);
+
+	// Make the coin disappear immediately
+	Mesh->SetVisibility(false);
+
+	if (FlashLight)
 	{
-		Player->PickCoin(CoinValue);
+		// Use the currently set intensity as max intensity of the curve
+		FlashIntensity = FlashLight->Intensity;
+
+		bFlashActive = true;
+		FlashLight->SetVisibility(true);
+		FlashLight->SetIntensity(0.f);
+
+		PrimaryActorTick.SetTickFunctionEnable(true);
 	}
 
-	Destroy();
+	// Leave a small delay for effects to happen
+	SetLifeSpan(FlashDuration);
+}
+
+void ACoin::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bFlashActive && FlashLight)
+	{
+		FlashElapsed += DeltaTime;
+
+		float EaseDuration = FlashDuration / 2.f;
+		const float EasingExponent = 2.f;
+
+		float Alpha;
+		if (FlashElapsed < FlashDuration)
+		{
+			// Flash is fading in
+			Alpha = FMath::Clamp(FlashElapsed / EaseDuration, 0.f, 1.f);
+		}
+		else
+		{
+			// Flash reached peak intensity, now fade out
+			Alpha = FMath::Clamp((FlashDuration - FlashElapsed) / EaseDuration, 0.f, 1.f);
+		}
+		float EasedIntensity = FMath::InterpEaseInOut(0.f, FlashIntensity, Alpha, EasingExponent);
+
+		FlashLight->SetIntensity(EasedIntensity);
+
+		if (FlashElapsed >= FlashDuration)
+		{
+			bFlashActive = false;
+		}
+	}
 }

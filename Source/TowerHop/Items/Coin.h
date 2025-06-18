@@ -34,4 +34,18 @@ protected:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
+
+	virtual void Tick(float DeltaTime) override;
+
+	// Flash effect
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	class UPointLightComponent* FlashLight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	float FlashDuration = 0.1f;
+
+private:
+	bool bFlashActive = false;
+	float FlashElapsed = 0.f;
+	float FlashIntensity;
 };
