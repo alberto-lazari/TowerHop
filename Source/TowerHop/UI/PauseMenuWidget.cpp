@@ -1,7 +1,7 @@
 #include "PauseMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/Button.h"
-#include "TowerHop/Characters/PlayerCharacterController.h"
+#include "TowerHop/Controllers/PlayerCharacterController.h"
 
 void UPauseMenuWidget::NativeConstruct()
 {

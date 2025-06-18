@@ -12,9 +12,9 @@
 #include "InputActionValue.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerAnimInstance.h"
-#include "TowerHop/TowerHopGameMode.h"
+#include "TowerHop/GameModes/TowerHopGameMode.h"
 #include "TowerHop/UI/TowerHopHUD.h"
-#include "PlayerCharacterController.h"
+#include "TowerHop/Controllers/PlayerCharacterController.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerCharacter);
 

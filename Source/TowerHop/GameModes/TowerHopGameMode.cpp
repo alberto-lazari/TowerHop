@@ -3,9 +3,9 @@
 #include "TowerHopGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
-#include "Characters/PlayerCharacter.h"
-#include "Characters/PlayerCharacterController.h"
-#include "UI/TowerHopHUD.h"
+#include "TowerHop/Characters/PlayerCharacter.h"
+#include "TowerHop/Controllers/PlayerCharacterController.h"
+#include "TowerHop/UI/TowerHopHUD.h"
 
 ATowerHopGameMode::ATowerHopGameMode()
 {
@@ -27,10 +27,11 @@ void ATowerHopGameMode::HandlePlayerDeath()
 {
 	// Delay game restart
 	float Delay = 1.5f;
-	GetWorldTimerManager().SetTimer(RestartTimer, this, &ATowerHopGameMode::ResetLevel, Delay, false);
+	GetWorldTimerManager().SetTimer(RestartTimer, this, &ATowerHopGameMode::GameOver, Delay, false);
 }
 
-void ATowerHopGameMode::ResetLevel()
+void ATowerHopGameMode::GameOver()
 {
-	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()), false);
+	// On game over return to main menu
+	UGameplayStatics::OpenLevel(this, FName("MainMenuMap"), false);
 }

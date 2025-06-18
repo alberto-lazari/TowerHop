@@ -19,5 +19,5 @@ public:
 private:
 	FTimerHandle RestartTimer;
 
-	void ResetLevel();
+	void GameOver();
 };
