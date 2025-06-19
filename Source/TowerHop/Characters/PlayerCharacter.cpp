@@ -21,6 +21,8 @@ DEFINE_LOG_CATEGORY(LogPlayerCharacter);
 
 APlayerCharacter::APlayerCharacter()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -66,6 +68,26 @@ void APlayerCharacter::BeginPlay()
 	{
 		HUD->UpdateHealthUI(Health, MaxHealth);
 		HUD->UpdateCoinsUI(0);
+	}
+}
+
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// Don't tick if player is dead
+	if (Health <= 0) return;
+
+	const float Time = GetWorld()->GetTimeSeconds();
+	if (Time - LastDamageTime < InvulnerabilityTime)
+	{
+		// Flash player mesh to signal invulnerability
+		const bool bFlash = FMath::Fmod(Time * 15.f, 2.f) < 1.f;
+		GetMesh()->SetVisibility(bFlash);
+	}
+	else
+	{
+		GetMesh()->SetVisibility(true);
 	}
 }
 
@@ -146,6 +168,14 @@ float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Damag
 	// If already dead do nothing
 	if (Health <= 0) return 0.f;
 
+	// Invulnerability window after the last hit
+	const float CurrentTime = GetWorld()->GetTimeSeconds();
+	if (CurrentTime - LastDamageTime < InvulnerabilityTime)
+	{
+		return 0.f;
+	}
+
+	LastDamageTime = CurrentTime;
 	Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
 
 	// Update UI

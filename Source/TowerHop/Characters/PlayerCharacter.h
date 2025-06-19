@@ -8,10 +8,8 @@
 
 class USpringArmComponent;
 class UCameraComponent;
-class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
-class ATowerHopHUD;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogPlayerCharacter, Log, All);
 
@@ -30,7 +28,7 @@ class APlayerCharacter : public ACharacter
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
+	class UInputMappingContext* DefaultMappingContext;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -47,7 +45,7 @@ class APlayerCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TogglePauseAction;
 
-	ATowerHopHUD* HUD;
+	class ATowerHopHUD* HUD;
 
 public:
 	APlayerCharacter();
@@ -61,6 +59,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 Health = MaxHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float InvulnerabilityTime = 1.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collectible")
 	int32 Coins = 0;
 
@@ -71,6 +72,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 	virtual float TakeDamage(
 		float DamageAmount,
@@ -94,6 +97,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	UAnimMontage* HitReactMontage;
+
+private:
+	float LastDamageTime = -1.f;
 
 public:
 	/** Returns CameraBoom subobject **/

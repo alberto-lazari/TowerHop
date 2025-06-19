@@ -150,7 +150,7 @@ void AEnemy::PlayScaleAnimation(float DeltaTime)
 
 void AEnemy::CircularPatrol()
 {
-	float Time = GetWorld()->GetTimeSeconds();
+	const float Time = GetWorld()->GetTimeSeconds();
 	FVector NewLocation = PatrolCenter + FVector(
 		FMath::Cos(Time * Speed) * PatrolRadius,
 		FMath::Sin(Time * Speed) * PatrolRadius,
@@ -159,12 +159,10 @@ void AEnemy::CircularPatrol()
 	FVector Movement = NewLocation - GetActorLocation();
 	SetActorLocation(NewLocation);
 
-	FVector Radius = PatrolCenter - NewLocation;
-	FVector Direction = Radius.Cross(Movement).Cross(Radius);
-
-	if (!Direction.IsNearlyZero())
+	if (!Movement.IsNearlyZero())
 	{
-		FRotator LookRotation = Direction.GetSafeNormal().Rotation();
+		// FRotator LookRotation = Direction.GetSafeNormal().Rotation();
+		FRotator LookRotation = Movement.GetSafeNormal().Rotation();
 		SetActorRotation(FRotator(0.f, LookRotation.Yaw, 0.f));
 	}
 }
