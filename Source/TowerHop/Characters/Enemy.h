@@ -12,6 +12,7 @@ class TOWERHOP_API AEnemy : public ACharacter
 public:
 	AEnemy();
 
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
@@ -89,9 +90,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
 	FVector PatrolCenter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
-	float PatrolRadius = 100.f;
-
 private:
-	void CircularPatrol();
+	float PatrolSpeed = 1.f;
+	FVector PatrolRadius;
+
+	void CircularPatrol(float DeltaTime);
 };

@@ -21,7 +21,7 @@ void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Origin == FVector::Zero())
+	if (Origin == FVector::ZeroVector)
 	{
 		Origin = GetActorLocation();
 	}

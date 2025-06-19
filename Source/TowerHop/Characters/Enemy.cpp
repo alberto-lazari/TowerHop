@@ -24,13 +24,24 @@ AEnemy::AEnemy()
 	HeadCollider->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnHeadOverlap);
 }
 
+void AEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Health = MaxHealth;
+
+	PatrolRadius = GetActorLocation() - PatrolCenter;
+	// Convert linear -> angular speed for the circular patrol
+	PatrolSpeed = Speed / PatrolRadius.Size();
+}
+
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	if (bIsAnimating) PlayScaleAnimation(DeltaTime);
 	// Stop patroling when dead
-	else if (Health > 0) CircularPatrol();
+	else if (Health > 0) CircularPatrol(DeltaTime);
 }
 
 void AEnemy::OnBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
@@ -148,20 +159,18 @@ void AEnemy::PlayScaleAnimation(float DeltaTime)
 	}
 }
 
-void AEnemy::CircularPatrol()
+void AEnemy::CircularPatrol(float DeltaTime)
 {
-	const float Time = GetWorld()->GetTimeSeconds();
-	FVector NewLocation = PatrolCenter + FVector(
-		FMath::Cos(Time * Speed) * PatrolRadius,
-		FMath::Sin(Time * Speed) * PatrolRadius,
-		0.f
-	);
+	float AngleDelta = DeltaTime * PatrolSpeed;
+	PatrolRadius = FQuat(FVector::UpVector, AngleDelta)
+		.RotateVector(PatrolRadius);
+
+	FVector NewLocation = PatrolCenter + PatrolRadius;
 	FVector Movement = NewLocation - GetActorLocation();
 	SetActorLocation(NewLocation);
 
 	if (!Movement.IsNearlyZero())
 	{
-		// FRotator LookRotation = Direction.GetSafeNormal().Rotation();
 		FRotator LookRotation = Movement.GetSafeNormal().Rotation();
 		SetActorRotation(FRotator(0.f, LookRotation.Yaw, 0.f));
 	}
