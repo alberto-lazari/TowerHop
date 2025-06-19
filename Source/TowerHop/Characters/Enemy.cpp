@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/AnimSingleNodeInstance.h"
 
 AEnemy::AEnemy()
 {
@@ -124,6 +125,12 @@ void AEnemy::StartScaleAnimation(FVector TargetScale, float Duration, bool bRest
 	AnimationTimer = 0.f;
 	// Duration is the total time required to play the animation and restore it
 	AnimationDuration = bRestore ? Duration : Duration / 2.f;
+
+	// Stop looping animation while the scale animation is playing
+	if (UAnimSingleNodeInstance* Animation = Cast<UAnimSingleNodeInstance>(GetMesh()->GetAnimInstance()))
+	{
+		Animation->SetPlaying(false);
+	}
 }
 
 void AEnemy::PlayScaleAnimation(float DeltaTime)
@@ -155,6 +162,12 @@ void AEnemy::PlayScaleAnimation(float DeltaTime)
 		else
 		{
 			bIsAnimating = false;
+
+			// Resume the looping animation (if not dead)
+			if (UAnimSingleNodeInstance* Animation = Cast<UAnimSingleNodeInstance>(GetMesh()->GetAnimInstance()))
+			{
+				Animation->SetPlaying(Health > 0);
+			}
 		}
 	}
 }
@@ -169,9 +182,17 @@ void AEnemy::CircularPatrol(float DeltaTime)
 	FVector Movement = NewLocation - GetActorLocation();
 	SetActorLocation(NewLocation);
 
+	// Enemy should face the tanget direction of the path
 	if (!Movement.IsNearlyZero())
 	{
-		FRotator LookRotation = Movement.GetSafeNormal().Rotation();
+		FVector TangentDirection = FVector::UpVector.Cross(PatrolRadius).GetSafeNormal();
+
+		// A perfect tangent direction makes enemies look like they are trying very hard to follow their
+		// path and ignoring the player. Pull the direction slightly outwards to fix.
+		const float PullFactor = 0.1f;
+		FVector OutwardsOffset = PullFactor * PatrolRadius.GetSafeNormal();
+
+		FRotator LookRotation = (TangentDirection + OutwardsOffset).GetSafeNormal().Rotation();
 		SetActorRotation(FRotator(0.f, LookRotation.Yaw, 0.f));
 	}
 }
