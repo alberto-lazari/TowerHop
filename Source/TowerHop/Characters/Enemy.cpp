@@ -10,12 +10,6 @@ AEnemy::AEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	if (UCapsuleComponent* Collider = GetCapsuleComponent())
-	{
-		// Bind hit event
-		Collider->OnComponentHit.AddDynamic(this, &AEnemy::OnBodyHit);
-	}
-
 	// Create and attach head collider
 	HeadCollider = CreateDefaultSubobject<USphereComponent>(TEXT("HeadCollider"));
 	HeadCollider->SetupAttachment(GetMesh());
@@ -29,9 +23,20 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (UCapsuleComponent* Collider = GetCapsuleComponent())
+	{
+		// Bind hit event
+		Collider->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+		Collider->SetGenerateOverlapEvents(true);
+		Collider->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnBodyOverlap);
+	}
+
 	Health = MaxHealth;
 
-	PatrolRadius = GetActorLocation() - PatrolCenter;
+	FVector Location = GetActorLocation();
+	// Fix patrol center on actor's Z for simpler computations
+	PatrolCenter.Z = Location.Z;
+	PatrolRadius = Location - PatrolCenter;
 	// Convert linear -> angular speed for the circular patrol
 	PatrolSpeed = Speed / PatrolRadius.Size();
 }
@@ -45,8 +50,9 @@ void AEnemy::Tick(float DeltaTime)
 	else if (Health > 0) CircularPatrol(DeltaTime);
 }
 
-void AEnemy::OnBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AEnemy::OnBodyOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+		bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!OtherActor || OtherActor == this) return;
 

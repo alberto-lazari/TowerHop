@@ -26,12 +26,13 @@ protected:
 	class USphereComponent* HeadCollider;
 
 	UFUNCTION()
-	void OnBodyHit(
-		UPrimitiveComponent* HitComponent,
+	void OnBodyOverlap(
+		UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse,
-		const FHitResult& Hit
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
 	);
 
 	UFUNCTION()
@@ -85,7 +86,7 @@ private:
 public:
 	// Patrol fields
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float Speed = 250.f;
+	float Speed = 200.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Patrol")
 	FVector PatrolCenter;

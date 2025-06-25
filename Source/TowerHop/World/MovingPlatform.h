@@ -21,9 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Platform")
 	FVector Destination;
 
-	UPROPERTY(EditAnywhere, Category = "Platform")
-	float EaseExponent = 2.f;
-
 protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;

@@ -35,7 +35,7 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 	ElapsedTime += DeltaTime;
 	float Alpha = FMath::Clamp(ElapsedTime / TravelDuration, 0.f, 1.f);
-	float EasedAlpha = FMath::InterpEaseInOut(0.f, 1.f, Alpha, EaseExponent);
+	float EasedAlpha = FMath::InterpSinInOut(0.f, 1.f, Alpha);
 
 	FVector NewLocation = FMath::Lerp(Origin, Destination, EasedAlpha);
 	SetActorLocation(NewLocation);
