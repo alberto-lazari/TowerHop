@@ -70,6 +70,8 @@ public:
 
 	void PickCoin(int32 CoinValue);
 
+	void PlayWinAnimation();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -98,8 +100,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	UAnimMontage* HitReactMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UAnimMontage* WaveMontage;
+
 private:
 	float LastDamageTime = -1.f;
+
+	void FaceCameraAndWave();
 
 public:
 	/** Returns CameraBoom subobject **/

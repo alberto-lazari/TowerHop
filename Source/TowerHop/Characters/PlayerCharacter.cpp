@@ -175,19 +175,13 @@ float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Damag
 
 	// Invulnerability window after the last hit
 	const float CurrentTime = GetWorld()->GetTimeSeconds();
-	if (CurrentTime - LastDamageTime < InvulnerabilityTime)
-	{
-		return 0.f;
-	}
+	if (CurrentTime - LastDamageTime < InvulnerabilityTime) return 0.f;
 
 	LastDamageTime = CurrentTime;
 	Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
 
 	// Update UI
-	if (HUD)
-	{
-		HUD->UpdateHealthUI(Health, MaxHealth);
-	}
+	if (HUD) HUD->UpdateHealthUI(Health, MaxHealth);
 
 	if (Health <= 0)
 	{
@@ -198,10 +192,8 @@ float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Damag
 		// Trigger hit animation
 		if (USkeletalMeshComponent* Mesh = GetMesh())
 		{
-			if (UPlayerAnimInstance* AnimInstance = Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
-			{
-				AnimInstance->Montage_Play(HitReactMontage);
-			}
+			UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
+			if (AnimInstance) AnimInstance->Montage_Play(HitReactMontage);
 		}
 	}
 
@@ -251,13 +243,13 @@ void APlayerCharacter::Die()
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		PlayerController->DisableInput(PlayerController);
+		PlayerController->SetIgnoreLookInput(true);
 	}
 
 	// Trigger death animation
 	if (USkeletalMeshComponent* Mesh = GetMesh())
 	{
-		if (UPlayerAnimInstance* AnimInstance =
-				Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
+		if (UPlayerAnimInstance* AnimInstance = Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
 		{
 			AnimInstance->bDead = true;
 		}
@@ -269,10 +261,45 @@ void APlayerCharacter::Die()
 	}
 }
 
+void APlayerCharacter::PlayWinAnimation()
+{
+	// Stop character and disable any further input
+	GetCharacterMovement()->DisableMovement();
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		PlayerController->DisableInput(PlayerController);
+		PlayerController->SetIgnoreLookInput(true);
+	}
+
+	// Trigger win animation
+	FaceCameraAndWave();
+}
+
 void APlayerCharacter::TogglePauseMenu()
 {
 	if (APlayerCharacterController* PlayerController = Cast<APlayerCharacterController>(Controller))
 	{
 		PlayerController->TogglePauseMenu();
 	}
+}
+
+void APlayerCharacter::FaceCameraAndWave()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	USkeletalMeshComponent* Mesh = GetMesh();
+	if (!PlayerController || !Mesh) return;
+
+	// Get where the camera is looking from
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
+
+	// Rotate towards camera
+	FVector TowardsCamera = CameraLocation - GetActorLocation();
+	FRotator LookAtRotation = FRotationMatrix::MakeFromX(TowardsCamera).Rotator();
+	SetActorRotation(FRotator(0.f, LookAtRotation.Yaw, 0.f));
+
+	// Play wave montage
+	UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
+	if (WaveMontage && AnimInstance) AnimInstance->Montage_Play(WaveMontage);
 }

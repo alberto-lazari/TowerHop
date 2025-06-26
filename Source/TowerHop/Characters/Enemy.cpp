@@ -48,6 +48,21 @@ void AEnemy::Tick(float DeltaTime)
 	if (bIsAnimating) PlayScaleAnimation(DeltaTime);
 	// Stop patroling when dead
 	else if (Health > 0) CircularPatrol(DeltaTime);
+
+	// Flash only if not dead
+	if (Health <= 0) return;
+
+	const float Time = GetWorld()->GetTimeSeconds();
+	if (Time - LastDamageTime < InvulnerabilityTime)
+	{
+		// Flash player mesh to signal invulnerability
+		const bool bFlash = FMath::Fmod(Time * 15.f, 2.f) < 1.f;
+		GetMesh()->SetVisibility(bFlash);
+	}
+	else
+	{
+		GetMesh()->SetVisibility(true);
+	}
 }
 
 void AEnemy::OnBodyOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -79,7 +94,7 @@ void AEnemy::OnHeadOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 		UGameplayStatics::ApplyDamage(this, 1.f, Player->GetController(), Player, nullptr);
 
 		// Player bounce
-		FVector BounceVelocity = FVector::UpVector * HitBounceSpeed;
+		FVector BounceVelocity = BounceDirection(Player) * HitBounceSpeed;
 		Player->LaunchCharacter(BounceVelocity, true, true);
 	}
 }
@@ -88,11 +103,13 @@ float AEnemy::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent,
 		AController* EventInstigator, AActor* DamageCauser)
 {
 	// If already dead do nothing
-	if (Health <= 0)
-	{
-		return 0.f;
-	}
+	if (Health <= 0) return 0.f;
 
+	// Invulnerability window after the last hit
+	const float CurrentTime = GetWorld()->GetTimeSeconds();
+	if (CurrentTime - LastDamageTime < InvulnerabilityTime) return 0.f;
+
+	LastDamageTime = CurrentTime;
 	Health = FMath::Max(0, Health - static_cast<int32>(DamageAmount));
 
 	if (Health > 0)

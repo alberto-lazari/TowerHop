@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 Health = MaxHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float InvulnerabilityTime = 1.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	float HitBounceSpeed = 600.f;
 
@@ -48,6 +51,8 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+	virtual FVector BounceDirection(class APlayerCharacter const* Player) const { return FVector::UpVector; }
+
 	virtual float TakeDamage(
 		float DamageAmount,
 		const FDamageEvent& DamageEvent,
@@ -55,7 +60,7 @@ protected:
 		AActor* DamageCauser
 	) override;
 
-	void Die();
+	virtual void Die();
 
 	// Crushing animation fields
 	UPROPERTY(EditDefaultsOnly, Category = "Crush")
@@ -82,6 +87,8 @@ private:
 
 	void StartScaleAnimation(FVector TargetScale, float Duration, bool bRestore = false);
 	void PlayScaleAnimation(float DeltaTime);
+
+	float LastDamageTime = -1.f;
 
 public:
 	// Patrol fields

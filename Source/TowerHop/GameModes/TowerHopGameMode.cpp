@@ -25,7 +25,42 @@ void ATowerHopGameMode::HandlePlayerDeath()
 {
 	// Delay game restart
 	float Delay = 1.5f;
-	GetWorldTimerManager().SetTimer(RestartTimer, this, &ATowerHopGameMode::GameOver, Delay, false);
+	GetWorldTimerManager().SetTimer(GameOverTimer, this, &ATowerHopGameMode::GameOver, Delay, false);
+}
+
+void ATowerHopGameMode::HandleBossDeath()
+{
+	FTimerManager& TimerManager = GetWorldTimerManager();
+
+	if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+	{
+		TimerManager.SetTimer(PlayerWinAnimationTimer, Player, &APlayerCharacter::PlayWinAnimation, WinAnimationDelay, false);
+	}
+
+	TimerManager.SetTimer(FadeToBlackTimer, this, &ATowerHopGameMode::FadeToBlack, FadeDelay, false);
+}
+
+void ATowerHopGameMode::FadeToBlack()
+{
+	// Delay game end
+	GetWorldTimerManager().SetTimer(GameOverTimer, this, &ATowerHopGameMode::GameOver, FadeDuration, false);
+
+	if (APlayerController* Controller = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
+		if (Controller->PlayerCameraManager)
+		{
+			Controller->PlayerCameraManager->StartCameraFade(
+				// (from, to) alpha
+				0.0f, 1.0f,
+				FadeDuration,
+				FLinearColor::Black,
+				// Don't fade audio
+				false,
+				// Hold the fade afterwards
+				true
+			);
+		}
+	}
 }
 
 void ATowerHopGameMode::GameOver()
