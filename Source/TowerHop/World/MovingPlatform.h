@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Platform")
 	FVector Destination;
 
+	UPROPERTY(EditAnywhere, Category = "Platform")
+	bool bActive = true;
+
 protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;

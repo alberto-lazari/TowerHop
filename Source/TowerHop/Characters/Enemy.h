@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 Health = MaxHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	float HitBounceSpeed = 600.f;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
 	class USphereComponent* HeadCollider;
@@ -53,9 +56,6 @@ protected:
 	) override;
 
 	void Die();
-
-	UPROPERTY(EditDefaultsOnly, Category = "Collision")
-	float HitBounceSpeed = 600.f;
 
 	// Crushing animation fields
 	UPROPERTY(EditDefaultsOnly, Category = "Crush")

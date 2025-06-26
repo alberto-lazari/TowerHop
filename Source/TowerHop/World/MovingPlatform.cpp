@@ -33,6 +33,8 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bActive) return;
+
 	ElapsedTime += DeltaTime;
 	float Alpha = FMath::Clamp(ElapsedTime / TravelDuration, 0.f, 1.f);
 	float EasedAlpha = FMath::InterpSinInOut(0.f, 1.f, Alpha);
