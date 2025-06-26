@@ -19,6 +19,23 @@ ATowerHopGameMode::ATowerHopGameMode()
 
 	// Set HUD
 	HUDClass = ATowerHopHUD::StaticClass();
+
+	// Load the soundtrack audio asset
+	static ConstructorHelpers::FObjectFinder<USoundBase> SoundtrackAsset(TEXT("/Game/World/SW_Soundtrack.SW_Soundtrack"));
+	if (SoundtrackAsset.Succeeded())
+	{
+		Soundtrack = SoundtrackAsset.Object;
+	}
+}
+
+void ATowerHopGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (Soundtrack)
+	{
+		Music = UGameplayStatics::SpawnSound2D(this, Soundtrack, 1.f, 1.f, 0.f, nullptr, true);
+	}
 }
 
 void ATowerHopGameMode::HandlePlayerDeath()
@@ -54,8 +71,8 @@ void ATowerHopGameMode::FadeToBlack()
 				0.0f, 1.0f,
 				FadeDuration,
 				FLinearColor::Black,
-				// Don't fade audio
-				false,
+				// Fade audio
+				true,
 				// Hold the fade afterwards
 				true
 			);

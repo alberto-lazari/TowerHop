@@ -27,6 +27,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Timer")
 	float FadeDuration = 1.f;
 
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	UAudioComponent* Music;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	USoundBase* Soundtrack;
+
 private:
 	FTimerHandle GameOverTimer;
 	FTimerHandle PlayerWinAnimationTimer;
