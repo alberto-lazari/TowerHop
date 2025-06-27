@@ -13,7 +13,7 @@ public:
 	AMainMenuController();
 
 	UPROPERTY(EditAnywhere)
-	FName GameMap = "World1Map";
+	FName GameMap = FName("World1Map");
 
 	UFUNCTION(BlueprintCallable)
 	void StartNewGame();
