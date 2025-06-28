@@ -190,9 +190,9 @@ float APlayerCharacter::TakeDamage(float DamageAmount, const FDamageEvent& Damag
 	else if (HitReactMontage)
 	{
 		// Trigger hit animation
-		if (USkeletalMeshComponent* Mesh = GetMesh())
+		if (GetMesh())
 		{
-			UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 			if (AnimInstance) AnimInstance->Montage_Play(HitReactMontage);
 		}
 	}
@@ -247,9 +247,9 @@ void APlayerCharacter::Die()
 	}
 
 	// Trigger death animation
-	if (USkeletalMeshComponent* Mesh = GetMesh())
+	if (GetMesh())
 	{
-		if (UPlayerAnimInstance* AnimInstance = Cast<UPlayerAnimInstance>(Mesh->GetAnimInstance()))
+		if (UPlayerAnimInstance* AnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance()))
 		{
 			AnimInstance->bDead = true;
 		}
@@ -286,8 +286,7 @@ void APlayerCharacter::TogglePauseMenu()
 void APlayerCharacter::FaceCameraAndWave()
 {
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	USkeletalMeshComponent* Mesh = GetMesh();
-	if (!PlayerController || !Mesh) return;
+	if (!PlayerController || !GetMesh()) return;
 
 	// Get where the camera is looking from
 	FVector CameraLocation;
@@ -300,6 +299,6 @@ void APlayerCharacter::FaceCameraAndWave()
 	SetActorRotation(FRotator(0.f, LookAtRotation.Yaw, 0.f));
 
 	// Play wave montage
-	UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (WaveMontage && AnimInstance) AnimInstance->Montage_Play(WaveMontage);
 }

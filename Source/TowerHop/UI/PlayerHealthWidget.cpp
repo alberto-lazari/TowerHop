@@ -27,11 +27,11 @@ void UPlayerHealthWidget::UpdateHearts(int32 Health, int32 MaxHealth)
 		SizeBox->AddChild(Heart);
 
 		// Add to horizontal box
-		if (UHorizontalBoxSlot* Slot = HeartsContainer->AddChildToHorizontalBox(SizeBox))
+		if (UHorizontalBoxSlot* HeartSlot = HeartsContainer->AddChildToHorizontalBox(SizeBox))
 		{
-			Slot->SetPadding(FMargin(HeartPadding));
-			Slot->SetHorizontalAlignment(HAlign_Left);
-			Slot->SetVerticalAlignment(VAlign_Center);
+			HeartSlot->SetPadding(FMargin(HeartPadding));
+			HeartSlot->SetHorizontalAlignment(HAlign_Left);
+			HeartSlot->SetVerticalAlignment(VAlign_Center);
 		}
 	}
 }

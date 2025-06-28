@@ -137,13 +137,13 @@ void AEnemy::Die()
 	SetLifeSpan(CrushDuration + DestroyDelay);
 }
 
-void AEnemy::StartScaleAnimation(FVector TargetScale, float Duration, bool bRestore)
+void AEnemy::StartScaleAnimation(FVector Target, float Duration, bool bRestore)
 {
 	bIsAnimating = true;
 	bRestoreAfterAnimation = bRestore;
 	InitialLocation = GetActorLocation();
 	InitialScale = GetActorScale3D();
-	this->TargetScale = InitialScale * TargetScale;
+	TargetScale = InitialScale * Target;
 	CapsuleHalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	AnimationTimer = 0.f;
 	// Duration is the total time required to play the animation and restore it

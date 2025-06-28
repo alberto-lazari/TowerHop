@@ -13,7 +13,7 @@ public:
 	ALever();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lever")
-	float bActive = false;
+	bool bActive = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lever")
 	class AMovingPlatform* ControlledPlatform;

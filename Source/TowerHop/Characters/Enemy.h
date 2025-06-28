@@ -85,7 +85,7 @@ private:
 	FVector TargetScale;
 	float CapsuleHalfHeight;
 
-	void StartScaleAnimation(FVector TargetScale, float Duration, bool bRestore = false);
+	void StartScaleAnimation(FVector Target, float Duration, bool bRestore = false);
 	void PlayScaleAnimation(float DeltaTime);
 
 	float LastDamageTime = -1.f;
