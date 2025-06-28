@@ -41,6 +41,11 @@ void UPauseMenuWidget::NativeConstruct()
 	}
 }
 
+void UPauseMenuWidget::SetFocus() const
+{
+	ResumeButton->SetFocus();
+}
+
 void UPauseMenuWidget::OnGraphicsButtonClick()
 {
 	if (!GameInstance) return;

@@ -27,6 +27,11 @@ void UMainMenuWidget::NativeConstruct()
 	}
 }
 
+void UMainMenuWidget::SetFocus() const
+{
+	NewGameButton->SetFocus();
+}
+
 void UMainMenuWidget::OnGraphicsButtonClick()
 {
 	if (!GameInstance) return;

@@ -11,6 +11,9 @@ class TOWERHOP_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	void SetFocus() const;
+
 protected:
 	virtual void NativeConstruct() override;
 

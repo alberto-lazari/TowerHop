@@ -38,13 +38,20 @@ void APlayerCharacterController::SetGamePaused(bool bPaused)
 	bGamePaused = bPaused;
 	UGameplayStatics::SetGamePaused(GetWorld(), bPaused);
 
-	if (bPaused) SetInputMode(FInputModeGameAndUI());
-	else SetInputMode(FInputModeGameOnly());
-
 	if (PauseMenuWidget)
 	{
 		bShowMouseCursor = bPaused;
 		PauseMenuWidget->SetVisibility(bPaused ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+
+		if (bPaused)
+		{
+			SetInputMode(FInputModeGameAndUI());
+			PauseMenuWidget->SetFocus();
+		}
+		else
+		{
+			SetInputMode(FInputModeGameOnly());
+		}
 	}
 }
 

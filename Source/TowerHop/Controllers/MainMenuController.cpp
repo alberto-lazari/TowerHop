@@ -30,6 +30,7 @@ void AMainMenuController::BeginPlay()
 			MainMenuWidget->AddToViewport();
 
 			SetInputMode(FInputModeUIOnly());
+			MainMenuWidget->SetFocus();
 			bShowMouseCursor = true;
 		}
 	}
