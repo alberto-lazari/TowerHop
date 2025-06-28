@@ -37,14 +37,9 @@ void APlayerCharacterController::SetGamePaused(bool bPaused)
 {
 	bGamePaused = bPaused;
 	UGameplayStatics::SetGamePaused(GetWorld(), bPaused);
-	if (bPaused)
-	{
-		SetInputMode(FInputModeGameAndUI());
-	}
-	else
-	{
-		SetInputMode(FInputModeGameOnly());
-	}
+
+	if (bPaused) SetInputMode(FInputModeGameAndUI());
+	else SetInputMode(FInputModeGameOnly());
 
 	if (PauseMenuWidget)
 	{
@@ -61,14 +56,4 @@ void APlayerCharacterController::TogglePauseMenu()
 void APlayerCharacterController::ResumeGame()
 {
 	SetGamePaused(false);
-}
-
-void APlayerCharacterController::StartNewGame()
-{
-	UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()));
-}
-
-void APlayerCharacterController::QuitGame()
-{
-	UKismetSystemLibrary::QuitGame(GetWorld(), this, EQuitPreference::Quit, true);
 }

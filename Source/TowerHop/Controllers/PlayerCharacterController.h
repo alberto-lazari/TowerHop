@@ -18,12 +18,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResumeGame();
 
-	UFUNCTION(BlueprintCallable)
-	void StartNewGame();
-
-	UFUNCTION(BlueprintCallable)
-	void QuitGame();
-
 protected:
 	virtual void BeginPlay() override;
 

@@ -1,7 +1,6 @@
 #include "MainMenuController.h"
 #include "Blueprint/UserWidget.h"
 #include "TowerHop/UI/MainMenuWidget.h"
-#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMainMenuController, Log, All);
 
@@ -34,14 +33,4 @@ void AMainMenuController::BeginPlay()
 			bShowMouseCursor = true;
 		}
 	}
-}
-
-void AMainMenuController::StartNewGame()
-{
-	UGameplayStatics::OpenLevel(this, GameMap);
-}
-
-void AMainMenuController::QuitGame()
-{
-	UKismetSystemLibrary::QuitGame(GetWorld(), this, EQuitPreference::Quit, true);
 }

@@ -11,13 +11,6 @@ class TOWERHOP_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void OnNewGameClicked();
-
-	UFUNCTION(BlueprintCallable)
-	void OnQuitClicked();
-
 protected:
 	virtual void NativeConstruct() override;
 
@@ -25,8 +18,19 @@ protected:
 	UButton* NewGameButton;
 
 	UPROPERTY(meta = (BindWidget))
+	UButton* GraphicsButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* GraphicsButtonText;
+
+	UPROPERTY(meta = (BindWidget))
 	UButton* QuitButton;
 
+	UFUNCTION()
+	void OnGraphicsButtonClick();
+
 private:
-	class AMainMenuController* Controller;
+	class UTowerHopGameInstance* GameInstance;
+
+	void UpdateGraphicsButtonText();
 };

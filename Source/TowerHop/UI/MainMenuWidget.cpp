@@ -1,30 +1,44 @@
 #include "MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/Button.h"
-#include "TowerHop/Controllers/MainMenuController.h"
+#include "Components/TextBlock.h"
+#include "TowerHop/TowerHopGameInstance.h"
 
 void UMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	Controller = Cast<AMainMenuController>(UGameplayStatics::GetPlayerController(this, 0));
-
-	if (NewGameButton)
+	GameInstance = Cast<UTowerHopGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (GameInstance)
 	{
-		NewGameButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnNewGameClicked);
-	}
-	if (QuitButton)
-	{
-		QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
+		if (NewGameButton)
+		{
+			NewGameButton->OnClicked.AddDynamic(GameInstance, &UTowerHopGameInstance::StartNewGame);
+		}
+		if (GraphicsButton)
+		{
+			GraphicsButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnGraphicsButtonClick);
+		}
+		if (QuitButton)
+		{
+			QuitButton->OnClicked.AddDynamic(GameInstance, &UTowerHopGameInstance::QuitGame);
+		}
+		UpdateGraphicsButtonText();
 	}
 }
 
-void UMainMenuWidget::OnNewGameClicked()
+void UMainMenuWidget::OnGraphicsButtonClick()
 {
-	if (Controller) Controller->StartNewGame();
+	if (!GameInstance) return;
+
+	GameInstance->CycleGraphicsQuality();
+	UpdateGraphicsButtonText();
 }
 
-void UMainMenuWidget::OnQuitClicked()
+void UMainMenuWidget::UpdateGraphicsButtonText()
 {
-	if (Controller) Controller->QuitGame();
+	if (!GameInstance || !GraphicsButtonText) return;
+
+	FText text = FText::FromString("Quality: " + GameInstance->GraphicsQualityText());
+	GraphicsButtonText->SetText(text);
 }

@@ -12,15 +12,6 @@ class TOWERHOP_API AMainMenuController : public APlayerController
 public:
 	AMainMenuController();
 
-	UPROPERTY(EditAnywhere)
-	FName GameMap = FName("World1Map");
-
-	UFUNCTION(BlueprintCallable)
-	void StartNewGame();
-
-	UFUNCTION(BlueprintCallable)
-	void QuitGame();
-
 protected:
 	virtual void BeginPlay() override;
 
