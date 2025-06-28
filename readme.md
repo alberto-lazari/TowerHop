@@ -1,6 +1,12 @@
 # Tower Hop
 
-A simple 3D platform Unreal demo.
+A simple 3D platform Unreal demo. \
+All game elements have been created using the Unreal Engine C++ API,
+limiting the use of Blueprint as much as possible.
+
+Developed during the Game Engine course of the Master in Computer Game Development.
+
+![thumbnail](Content/Images/thumbnail.png)
 
 ## Credits
 

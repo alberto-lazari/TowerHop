@@ -13,4 +13,5 @@
 *.jpg lfs
 *.jpeg lfs
 *.ico lfs
+*.icns lfs
 *.mp3 lfs
